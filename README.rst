@@ -1,91 +1,247 @@
 SAS Kernel for Jupyter
 ======================
 
-What is this?
--------------
+|Binder|
 
-A SAS Kernel for `Jupyter Notebooks`_
+|Publish Python Package| ## Overview
 
-Dependencies
-------------
+The SAS Kernel for `Jupyter Notebooks <http://www.jupyter.org>`__ is
+capable of running SAS programs from within the Jupyter interface. The
+SAS kernel allows a user to leverage all of the SAS products they have
+licensed.
 
--  Python3.X
--  Jupyter
--  SAS 9.4 or higher – This includes `SAS Viya`_
--  Linux OS
-
-With the latest changes in `saspy`_ it is no longer a requirement that
-Jupyter and SAS be installed on the same machine. SAS and Jupyter can
-now communicate via passwordless ssh. This is in response to `issue
-11`_. The configuration details are located in `sascfg.py`_
+After installing the SAS kernel, you can use a notebook and a SAS
+installation to write, document, and submit SAS programming statements.
+The Jupyter notebook interface allows sharing of results through JSON
+and the SAS kernel is no exception, you can share code and results in a
+static form through the Jupyter notebook.
 
 Documentation
 -------------
 
 Here is the link to the current documentation
-https://sassoftware.github.io/sas\_kernel/
+https://sassoftware.github.io/sas_kernel/
 
-Install
--------
+Prerequisites
+-------------
 
-To successfully use the SAS Kernel you must have each of the following:
-\* `SAS version 9.4 or above`_ \* `Jupyter`_ \* Jupyter has a number of
-dependencies. See the subsections for steps on installing Jupyter on
-your system. \* `Python 3`_
+-  Python3 (this is now the default since Python2 went end of life in
+   January 2020)
+-  Jupyter version 4 or higher
+-  SAS 9.4 or higher -- This includes `SAS
+   Viya <http://www.sas.com/en_us/software/viya.html>`__. The SAS kernel
+   is compatable with any version of SAS released since July 2013.
+-  SASPy -- The SAS kernel has as dependency on
+   `SASPy <https://github.com/sassoftware/saspy>`__. The package will be
+   installed automatically but it must be configured to access your
+   availble SAS server. **SASPy must be
+   `configured <https://sassoftware.github.io/saspy/install.html#configuration>`__
+   before the SAS kernel can work successfully**.
 
-Install for Anaconda Python (assuming SAS already installed)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Installation
+------------
 
-1. `Download`_ and install Anaconda Python (make sure you get
-   Python3.X). If you install Anaconda without super user rights (root
-   or sudo) then other users on the system will not be able to access
-   the SAS kernel. A couple notes that I’ve observed:
+This will install the SAS Kernel for jupyter as well as the Jupyter lab
+extensions (jupyterlab v3+ is required) to make you a more productive
+programmer within Jupyter. `Here are
+details <https://github.com/jld23/sas_kernel_ext>`__ about the
+extensions.
 
--  The default install location is the users home directory. This is
-   fine for a single user install I would put it in a common location
-   (``/opt``) if you’re doing a system wide install
--  One of the prompts is to add the path to your environment. I
-   recommend you want to answer ‘yes’ to that question so that all the
-   installing user has the executables in their path. If you’re doing a
-   system wide install (root or sudo) all the other users should add
-   that path to their environmental variables
+.. code:: bash
 
-1. Install sas\_kernel. The sas\_kernel has a dependency on saspy which
-   is located `here`_. In the command below I’m assuming that ``pip``
-   maps to python3 if that is not the case the you might need to use
-   ``pip3`` instead. ``pip install sas_kernel``
+    pip install sas_kernel['jlab_ext']
 
-2. Verify that the sas\_kernel is installed ``jupyter kernelspec list``
+The common methods to install are
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   If you installed as a superuser, your output should similar to this:
+1. ``pip`` -- PIP is the most common way to install the latest stable
+   version of the code.
 
-   ::
+``bash    pip install sas_kernel``
 
-       Available kernels:
-         python3    /opt/Anaconda3-2.5.0/lib/python3.5/site-packages/ipykernel/resources
-         sas        /usr/local/share/jupyter/kernels/sas
+1. ``conda`` -- A conda package is also available if you prefer to use
+   conda as your package manger
 
-   If you installed as a regular user (sas in this case), your output
-   should similar to this:
+``bash    conda install -c anaconda sas_kernel``
 
-   ::
+1. From source -- If you need to install from the source branch before a
+   new version has been built and pushed you can install from source
+   like this:
 
-       Available kernels:
-         python3    /home/sas/anaconda3/lib/python3.5/site-packages/ipykernel/resources
-         sas        /home/sas/.local/share/jupyter/kernels/sas
+``bash    pip install git+https://git@github.com/sassoftware/sas_kernel.git@main``
 
-3. Verify SAS Executable is correct
+Note that the default branch is now ``main`` to match the GitHub
+convention. You can modify the about URL if you're installing from a
+fork or a non-default branch.
 
-   1. find the sascfg.py file – it is currently located in the install
-      location (see above) \`[install location]/site-
+To verify that the sas\_kernel is installed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. _Jupyter Notebooks: http://www.jupyter.org
-.. _SAS Viya: http://www.sas.com/en_us/software/viya.html
-.. _saspy: https://github.com/sassoftware/saspy
-.. _issue 11: https://github.com/sassoftware/sas_kernel/issues/11
-.. _sascfg.py: https://github.com/sassoftware/saspy/blob/master/saspy/sascfg.py
-.. _SAS version 9.4 or above: http://www.sas.com
-.. _Jupyter: http://jupyter.org
-.. _Python 3: http://www.python.org
-.. _Download: https://www.continuum.io/downloads
-.. _here: https://github.com/sassoftware/saspy
+.. code:: bash
+
+    jupyter kernelspec list
+
+You should see output *similar* to code below:
+
+.. code:: bash
+
+    Available kernels:
+        python3    /home/sas/anaconda3/lib/python3.5/site-packages/ipykernel/resources
+        sas        /home/sas/.local/share/jupyter/kernels/sas
+
+**NOTE:** You will not be able to execute SAS code through Juypter until
+you have `configured
+SASPy <https://sassoftware.github.io/saspy/install.html#configuration>`__.
+
+Getting Started
+---------------
+
+Here is a basic example of programming with SAS and Jupyter Notebook:
+`Getting
+Started <https://sassoftware.github.io/sas_kernel/getting-started.html>`__
+
+Improving Usability
+~~~~~~~~~~~~~~~~~~~
+
+For the Jupyter Lab extensions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There is a seperate reposity where the extensions are developed and
+maintained. See `that repo <https://github.com/jld23/sas_kernel_ext>`__
+for details
+
+For the Legacy Jupyter Notebook
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are a few NBExtensions that have been created to make working with
+Jupyter notebooks more productive. These are largely the result of pain
+points from my use of SAS Kernel for programming tasks. The extensions
+can be found `here <./sas_kernel/nbextensions>`__. The list includes:
+
+-  SAS Log -- which show the SAS log for the last executed cell or the
+   entire log since the last (re)start of the notebook
+-  themes -- this allows you to change the color scheme for your code to
+   match the traditional SAS color scheme
+
+**NOTE:** These extensions are for Jupyter *Notebook* they are not
+compatable with Jupyter *Lab*. Jupyter Lab extensions are in development
+and will be released shortly.
+
+Installing the SAS Extensions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Details for installing the extensions for SAS can be found
+`here <./sas_kernel/nbextensions/README.md>`__
+
+Jupyter Magics for the sas\_kernel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are magics that have been written specifically for the sas\_kernel
+to get more details see the `README <./sas_kernel/magics/README.md>`__
+
+NBGrader
+~~~~~~~~
+
+`nbgrader <http://nbgrader.readthedocs.org/en/stable/>`__ is a system
+for assigning and grading notebooks and extends jupyter. NBgrader is
+compatible with the SAS kernel. The work was merged in `September
+2020 <https://github.com/jupyter/nbgrader/pull/1356>`__. It will be
+widely available with the next release of NBGrader (0.62), until then
+you can install from source.
+
+FAQ
+---
+
+-  Is there a SAS Magic that I can access from a python kernel?
+
+Yes! There are actually several cell magics available from SAS. They are
+``%%SAS``, ``%%IML``, and ``%%OPTMODEL``. To load these magics in your
+notebook, execute the following command ``%load_ext saspy.sas_magic``.
+You can check that the magics have are successfully activated by looking
+at the results of ``%lsmagic`` and looking in the cell magic section. If
+you use multiple SAS Cell magics in the *same* notebook they will share
+a SAS session (have the same WORK libname and MACROS). There is
+currently no sharing of SAS Sessions between different notebooks.
+
+-  Do I need to buy SAS to use this kernel?
+
+The SAS Kernel is simply a gateway for Jupyter notebooks to talk to SAS,
+as such, if SAS is not installed this kernel won't be helpful. For
+information on purchasing SAS `click
+here <http://www.sas.com/en_us/software/how-to-buy.html>`__
+
+-  How does Jupyter communicate with SAS?
+
+Behind a Jupyter notebook is a python session, that python session
+submits code to SAS and receives responses through various pathways
+(depending on the SASPy configuration). Jupyter can communicate with any
+SAS host (Windows, Linux, Unix, MVS) that has been released since July
+2013 to present.
+
+-  How can I see my SAS log, I only see the listing output?
+
+SAS is different from many other programming languages in that it has
+two useful information streams, the log (which details the technical
+details of what happened and how long it took) and the lst (which
+includes the tables and graphics from the analysis). The SAS Kernel
+attempts to show you I *think* you want. Here are the rules:
+
++-------------------------------+-------+---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| LOG                           | LST   | DISPLAYED                                                           | NOTES                                                                       |
++===============================+=======+=====================================================================+=============================================================================+
+| Yes                           | No    | LOG                                                                 | This happens when you run DATA Step or a PROC with the ``noprint`` option   |
++-------------------------------+-------+---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| Yes                           | Yes   | LST                                                                 | ---                                                                         |
++-------------------------------+-------+---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| Yes (with ERROR message(s))   | Yes   | ERROR messages with context from the log, then the listing output   | ---                                                                         |
++-------------------------------+-------+---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+| Yes (with ERROR message(s))   | No    | LOG                                                                 | ---                                                                         |
++-------------------------------+-------+---------------------------------------------------------------------+-----------------------------------------------------------------------------+
+
+If you want to see the log but it was not displayed you can use `SASLog
+NBExtension <./sas_kernel/nbextensions/README.md>`__ which will show the
+log for the last executed cell or the entire log since the last
+(re)start of the notebook
+
+-  Will this leave a bunch of SAS sessions hanging around?
+
+A SAS session is started for each notebook you have open i.e. 5
+notebooks open = 5 SAS sessions. Those sessions will remain active for
+the life of the notebook. If you shutdown your notebook, the SAS session
+will also terminate. In Jupyterhub, there are configuration options to
+shutdown inactive sessions and the SAS kernel complies with those
+directives.
+
+-  I restarted my SAS Kernel and now my WORK library is now empty. What
+   happened?
+
+When you restart the kernel in a notebook you are terminating the
+current SAS session and starting a new one. All of the temporary
+artifacts, data sets in the WORK library, assigned libnames, filename,
+WORK macros, and so on are destroyed.
+
+Contributing
+------------
+
+The `Contributor
+Agreement <https://github.com/sassoftware/sas_kernel/blob/master/ContributorAgreement.txt>`__
+details how contributions can be made.
+
+Licensing
+---------
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may
+not use this file except in compliance with the License. You may obtain
+a copy of the License at
+`LICENSE.txt <https://github.com/sassoftware/sas_kernel/blob/master/LICENSE.txt>`__
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+.. |Binder| image:: https://mybinder.org/badge_logo.svg
+   :target: https://mybinder.org/v2/gh/jld23/sas_kernel/HEAD
+.. |Publish Python Package| image:: https://github.com/sassoftware/sas_kernel/actions/workflows/python-publish.yml/badge.svg
+   :target: https://github.com/sassoftware/sas_kernel/actions/workflows/python-publish.yml

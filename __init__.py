@@ -13,7 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-
 def isnotebook():
     try:
         shell = get_ipython().__class__.__name__
