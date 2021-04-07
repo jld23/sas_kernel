@@ -14,7 +14,6 @@
 #  limitations under the License.
 #
 
-
 def _jupyter_nbextension_paths():
     return [dict(section="notebook",
                  # relative path to the module directory
